@@ -6,9 +6,7 @@ node {
     }
 
     stage ('Add to Jenkins shared-libraries'){
-        steps {
-            sh "rm /var/lib/jenkins/workflow-libs/*"
-            sh "cp ${WORKSPACE}/ /var/lib/jenkins/workflow-libs"
-        }
+        sh "rm /var/lib/jenkins/workflow-libs/*"
+        sh "cp ${WORKSPACE}/ /var/lib/jenkins/workflow-libs"
     }
 }
