@@ -31,7 +31,7 @@ def call(String sonarProjectKey, String sonarToken) {
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        sh "mvn test -e"
+                        sh "mvn test -e -Dsurefire.useFile=false"
                     }
                 }
             }
