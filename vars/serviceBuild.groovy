@@ -1,6 +1,6 @@
 #!groovy
 
-def call(sonarProjectKey, sonarToken) {
+def call(String sonarProjectKey, String sonarToken) {
     pipeline {
         agent any
 
