@@ -1,6 +1,6 @@
 #!groovy
 
-def call(String sonarProjectKey, String sonarToken) {
+def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
     pipeline {
         agent any
 
@@ -44,7 +44,7 @@ def call(String sonarProjectKey, String sonarToken) {
                     ) {
                         sh "mvn sonar:sonar \
                           -Dsonar.projectKey=${sonarProjectKey} \
-                          -Dsonar.organization=frogdevelopment \
+                          -Dsonar.organization=${sonarOrganization} \
                           -Dsonar.host.url=https://sonarcloud.io \
                           -Dsonar.login=${sonarToken} \
                           -e "
