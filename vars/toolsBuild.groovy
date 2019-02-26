@@ -9,7 +9,7 @@ def call() {
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn clean -e"
                     }
@@ -20,7 +20,7 @@ def call() {
                 steps {
                     withMaven (
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn package -e"
                     }
@@ -31,7 +31,7 @@ def call() {
                 steps {
                     withMaven (
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn dockerfile:build -e"
                     }
@@ -41,7 +41,7 @@ def call() {
                 steps {
                     withMaven (
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         withCredentials([
                                 usernamePassword(credentialsId: 'docker-credentials',
