@@ -9,7 +9,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn clean -e"
                     }
@@ -19,7 +19,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn compile -e"
                     }
@@ -29,7 +29,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn test -e -Dsurefire.useFile=false"
                     }
@@ -40,7 +40,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn sonar:sonar \
                           -Dsonar.projectKey=${sonarProjectKey} \
@@ -56,7 +56,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Default'
+                            jdk: 'OpenJ9'
                     ) {
                         sh "mvn install -Dmaven.test.skip=true -e "
                     }
