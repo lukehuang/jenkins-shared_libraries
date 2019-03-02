@@ -9,7 +9,7 @@ def call() {
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Java 8'
+                            jdk: 'Default'
                     ) {
                         sh "mvn clean -e"
                     }
@@ -19,7 +19,7 @@ def call() {
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Java 8'
+                            jdk: 'Default'
                     ) {
                         sh "mvn compile -e"
                     }
@@ -29,7 +29,7 @@ def call() {
                 steps {
                     withMaven(
                             maven: 'Default',
-                            jdk: 'Java 8'
+                            jdk: 'Default'
                     ) {
                         sh "mvn test -e -Dsurefire.useFile=false"
                     }
@@ -40,7 +40,7 @@ def call() {
                 steps {
                     withMaven (
                             maven: 'Default',
-                            jdk: 'Java 8'
+                            jdk: 'Default'
                     ) {
                         sh "mvn package -DskipTests=true -e"
                     }
