@@ -7,6 +7,7 @@ def call() {
         options {
             // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr:'10'))
+            disableConcurrentBuilds()
         }
 
         stages {
