@@ -53,5 +53,11 @@ def call() {
                 }
             }
         }
+
+        post {
+            always {
+                sendNotifications currentBuild.result
+            }
+        }
     }
 }
