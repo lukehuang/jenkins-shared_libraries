@@ -5,6 +5,12 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
         agent any
 
         stages {
+            stage ('Start') {
+                steps {
+                    // send build started notifications
+                    sendNotifications 'STARTED'
+                }
+            }
             stage('Clean') {
                 steps {
                     withMaven(

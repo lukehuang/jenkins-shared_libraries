@@ -5,6 +5,12 @@ def call() {
         agent any
 
         stages {
+            stage ('Start') {
+                steps {
+                    // send build started notifications
+                    sendNotifications 'STARTED'
+                }
+            }
             stage('Clean') {
                 steps {
                     withMaven(
