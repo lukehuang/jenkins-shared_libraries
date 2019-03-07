@@ -74,11 +74,11 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 }
             }
         }
-    }
 
-    post {
-        always {
-            sendNotifications currentBuild.result
+        post {
+            always {
+                sendNotifications currentBuild.result
+            }
         }
     }
 }
