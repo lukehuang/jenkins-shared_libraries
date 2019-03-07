@@ -4,6 +4,11 @@ def call() {
     pipeline {
         agent any
 
+        options {
+            // Only keep the 10 most recent builds
+            buildDiscarder(logRotator(numToKeepStr:'10'))
+        }
+
         stages {
             stage ('Start') {
                 steps {
@@ -53,11 +58,11 @@ def call() {
                 }
             }
         }
+    }
 
-        post {
-            always {
-                sendNotifications currentBuild.result
-            }
+    post {
+        always {
+            sendNotifications currentBuild.result
         }
     }
 }
