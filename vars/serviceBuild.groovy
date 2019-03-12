@@ -23,7 +23,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn clean -e"
+                        ansiColor("xterm") {
+                            sh "mvn clean -e"
+                        }
                     }
                 }
             }
@@ -33,7 +35,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn compile -e"
+                        ansiColor("xterm") {
+                            sh "mvn compile -e"
+                        }
                     }
                 }
             }
@@ -43,7 +47,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn test -e -Dsurefire.useFile=false"
+                        ansiColor("xterm") {
+                            sh "mvn test -e -Dsurefire.useFile=false"
+                        }
                     }
                 }
             }
@@ -54,12 +60,14 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn sonar:sonar \
-                          -Dsonar.projectKey=${sonarProjectKey} \
-                          -Dsonar.organization=${sonarOrganization} \
-                          -Dsonar.host.url=https://sonarcloud.io \
-                          -Dsonar.login=${sonarToken} \
-                          -e "
+                        ansiColor("xterm") {
+                            sh "mvn sonar:sonar \
+                              -Dsonar.projectKey=${sonarProjectKey} \
+                              -Dsonar.organization=${sonarOrganization} \
+                              -Dsonar.host.url=https://sonarcloud.io \
+                              -Dsonar.login=${sonarToken} \
+                              -e "
+                        }
                     }
                 }
             }
@@ -70,7 +78,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn package -DskipTests=true -e"
+                        ansiColor("xterm") {
+                            sh "mvn package -DskipTests=true -e"
+                        }
                     }
                 }
             }
@@ -81,7 +91,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn dockerfile:build -e"
+                        ansiColor("xterm") {
+                            sh "mvn dockerfile:build -e"
+                        }
                     }
                 }
             }
@@ -95,7 +107,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                                 usernamePassword(credentialsId: 'docker-credentials',
                                         usernameVariable: 'USERNAME',
                                         passwordVariable: 'PASSWORD')]) {
-                            sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
+                            ansiColor("xterm") {
+                                sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
+                            }
                         }
                     }
                 }
