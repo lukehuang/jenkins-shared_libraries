@@ -1,17 +1,17 @@
 #!groovy
 
-def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
+def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment', String maven = 'Default', String jdk = 'OpenJ9') {
     pipeline {
         agent any
 
         options {
             // Only keep the 10 most recent builds
-            buildDiscarder(logRotator(numToKeepStr:'10'))
+            buildDiscarder(logRotator(numToKeepStr: '10'))
             disableConcurrentBuilds()
         }
 
         stages {
-            stage ('Start') {
+            stage('Start') {
                 steps {
                     // send build started notifications
                     sendNotifications 'STARTED'
@@ -20,8 +20,8 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage('Clean') {
                 steps {
                     withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
+                            maven: "${maven}",
+                            jdk: "${jdk}"
                     ) {
                         ansiColor("xterm") {
                             sh "mvn clean -e"
@@ -32,8 +32,8 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage('Compile') {
                 steps {
                     withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
+                            maven: "${maven}",
+                            jdk: "${jdk}"
                     ) {
                         ansiColor("xterm") {
                             sh "mvn compile -e"
@@ -44,8 +44,8 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage('Test') {
                 steps {
                     withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
+                            maven: "${maven}",
+                            jdk: "${jdk}"
                     ) {
                         ansiColor("xterm") {
                             sh "mvn test -e -Dsurefire.useFile=false"
@@ -56,8 +56,8 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage('Analyse') {
                 steps {
                     withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
+                            maven: "${maven}",
+                            jdk: "${jdk}"
                     ) {
                         ansiColor("xterm") {
                             sh "mvn sonar:sonar \
@@ -72,9 +72,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Package') {
                 steps {
-                    withMaven (
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
+                    withMaven(
+                            maven: "${maven}",
+                            jdk: "${jdk}"
                     ) {
                         ansiColor("xterm") {
                             sh "mvn package -DskipTests=true -e"
@@ -84,9 +84,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Docker Build') {
                 steps {
-                    withMaven (
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
+                    withMaven(
+                            maven: "${maven}",
+                            jdk: "${jdk}"
                     ) {
                         ansiColor("xterm") {
                             sh "mvn dockerfile:build -e"
@@ -96,9 +96,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Docker Push') {
                 steps {
-                    withMaven (
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
+                    withMaven(
+                            maven: "${maven}",
+                            jdk: "${jdk}"
                     ) {
                         withCredentials([
                                 usernamePassword(credentialsId: 'docker-credentials',
