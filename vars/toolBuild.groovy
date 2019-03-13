@@ -23,29 +23,33 @@ def call() {
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn clean -e"
+                        ansiColor("xterm") {
+                            sh "mvn clean -e"
+                        }
                     }
                 }
             }
-
             stage('Package') {
                 steps {
                     withMaven (
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn package -e"
+                        ansiColor("xterm") {
+                            sh "mvn package -e"
+                        }
                     }
                 }
             }
-
             stage('Docker Build') {
                 steps {
                     withMaven (
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        sh "mvn dockerfile:build -e"
+                        ansiColor("xterm") {
+                            sh "mvn dockerfile:build -e"
+                        }
                     }
                 }
             }
@@ -59,7 +63,9 @@ def call() {
                                 usernamePassword(credentialsId: 'docker-credentials',
                                         usernameVariable: 'USERNAME',
                                         passwordVariable: 'PASSWORD')]) {
-                            sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
+                            ansiColor("xterm") {
+                                sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
+                            }
                         }
                     }
                 }

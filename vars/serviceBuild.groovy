@@ -53,7 +53,6 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                     }
                 }
             }
-
             stage('Analyse') {
                 steps {
                     withMaven(
@@ -71,7 +70,6 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                     }
                 }
             }
-
             stage('Package') {
                 steps {
                     withMaven (
@@ -84,7 +82,6 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                     }
                 }
             }
-
             stage('Docker Build') {
                 steps {
                     withMaven (

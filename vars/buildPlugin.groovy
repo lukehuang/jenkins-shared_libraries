@@ -23,7 +23,9 @@ def call() {
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        sh "mvn clean -e"
+                        ansiColor("xterm") {
+                            sh "mvn clean -e"
+                        }
                     }
                 }
             }
@@ -33,7 +35,9 @@ def call() {
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        sh "mvn compile -e"
+                        ansiColor("xterm") {
+                            sh "mvn compile -e"
+                        }
                     }
                 }
             }
@@ -43,18 +47,21 @@ def call() {
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        sh "mvn test -e -Dsurefire.useFile=false"
+                        ansiColor("xterm") {
+                            sh "mvn test -e -Dsurefire.useFile=false"
+                        }
                     }
                 }
             }
-
             stage('Package') {
                 steps {
                     withMaven (
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        sh "mvn package -DskipTests=true -e"
+                        ansiColor("xterm") {
+                            sh "mvn package -DskipTests=true -e"
+                        }
                     }
                 }
             }
