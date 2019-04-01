@@ -6,12 +6,13 @@ def call() {
 
         options {
             // Only keep the 10 most recent builds
-            buildDiscarder(logRotator(numToKeepStr:'10'))
+            buildDiscarder(logRotator(numToKeepStr: '10'))
             disableConcurrentBuilds()
+            ansiColor('xterm')
         }
 
         stages {
-            stage ('Start') {
+            stage('Start') {
                 steps {
                     // send build started notifications
                     sendNotifications 'STARTED'
@@ -23,9 +24,7 @@ def call() {
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        ansiColor("xterm") {
-                            sh "mvn clean -e"
-                        }
+                        sh "mvn clean -e"
                     }
                 }
             }
@@ -35,9 +34,7 @@ def call() {
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        ansiColor("xterm") {
-                            sh "mvn compile -e"
-                        }
+                        sh "mvn compile -e"
                     }
                 }
             }
@@ -47,21 +44,17 @@ def call() {
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        ansiColor("xterm") {
-                            sh "mvn test -e -Dsurefire.useFile=false"
-                        }
+                        sh "mvn test -e -Dsurefire.useFile=false"
                     }
                 }
             }
             stage('Package') {
                 steps {
-                    withMaven (
+                    withMaven(
                             maven: 'Default',
                             jdk: 'Default'
                     ) {
-                        ansiColor("xterm") {
-                            sh "mvn package -DskipTests=true -e"
-                        }
+                        sh "mvn package -DskipTests=true -e"
                     }
                 }
             }

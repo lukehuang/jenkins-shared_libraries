@@ -6,12 +6,13 @@ def call() {
 
         options {
             // Only keep the 10 most recent builds
-            buildDiscarder(logRotator(numToKeepStr:'10'))
+            buildDiscarder(logRotator(numToKeepStr: '10'))
             disableConcurrentBuilds()
+            ansiColor('xterm')
         }
 
         stages {
-            stage ('Start') {
+            stage('Start') {
                 steps {
                     // send build started notifications
                     sendNotifications 'STARTED'
@@ -23,39 +24,33 @@ def call() {
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        ansiColor("xterm") {
-                            sh "mvn clean -e"
-                        }
+                        sh "mvn clean -e"
                     }
                 }
             }
             stage('Package') {
                 steps {
-                    withMaven (
+                    withMaven(
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        ansiColor("xterm") {
-                            sh "mvn package -e"
-                        }
+                        sh "mvn package -e"
                     }
                 }
             }
             stage('Docker Build') {
                 steps {
-                    withMaven (
+                    withMaven(
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
-                        ansiColor("xterm") {
-                            sh "mvn dockerfile:build -e"
-                        }
+                        sh "mvn dockerfile:build -e"
                     }
                 }
             }
             stage('Docker Push') {
                 steps {
-                    withMaven (
+                    withMaven(
                             maven: 'Default',
                             jdk: 'OpenJ9'
                     ) {
@@ -63,9 +58,7 @@ def call() {
                                 usernamePassword(credentialsId: 'docker-credentials',
                                         usernameVariable: 'USERNAME',
                                         passwordVariable: 'PASSWORD')]) {
-                            ansiColor("xterm") {
-                                sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
-                            }
+                            sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
                         }
                     }
                 }
