@@ -1,7 +1,9 @@
 #!groovy
 
 def call(String dockerBuild) {
-    node {
+    pipeline {
+        agent any
+
         options {
             // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -9,22 +11,20 @@ def call(String dockerBuild) {
             ansiColor('xterm')
         }
 
-        stage('Start') {
-            sendNotifications 'STARTED'
-        }
+        stages {
+            stage('Start') {
+                sendNotifications 'STARTED'
+            }
 
-        stage('Checkout') {
-            checkout scm
-        }
+            stage('Build image') {
+                containerImage = docker.build("$dockerBuild", "--no-cache .")
+            }
 
-        stage('Build image') {
-            containerImage = docker.build("$dockerBuild", "--no-cache .")
-        }
-
-        stage('Push image') {
-            docker.withRegistry('', 'docker-credentials') {
-                containerImage.push("latest")
-                containerImage.push("${BUILD_NUMBER}")
+            stage('Push image') {
+                docker.withRegistry('', 'docker-credentials') {
+                    containerImage.push("latest")
+                    containerImage.push("${BUILD_NUMBER}")
+                }
             }
         }
 
