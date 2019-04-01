@@ -4,6 +4,11 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
     pipeline {
         agent any
 
+        tools {
+            maven 'Default'
+            jdk 'OpenJ9'
+        }
+
         options {
             // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -20,81 +25,46 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Clean') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn clean -e"
-                    }
+                    sh "mvn clean -e -B"
                 }
             }
             stage('Compile') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn compile -e"
-                    }
+                    sh "mvn compile -e -B"
                 }
             }
             stage('Test') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn test -e -Dsurefire.useFile=false"
-                    }
+                    sh "mvn test -e -B -Dsurefire.useFile=false"
                 }
             }
             stage('Analyse') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn sonar:sonar \
+                    sh "mvn sonar:sonar \
                               -Dsonar.projectKey=${sonarProjectKey} \
                               -Dsonar.organization=${sonarOrganization} \
                               -Dsonar.host.url=https://sonarcloud.io \
                               -Dsonar.login=${sonarToken} \
-                              -e "
-                    }
+                              -e -B"
                 }
             }
             stage('Package') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn package -DskipTests=true -e"
-                    }
+                    sh "mvn package -DskipTests=true -e -B"
                 }
             }
             stage('Docker Build') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn dockerfile:build -e"
-                    }
+                    sh "mvn dockerfile:build -e -B"
                 }
             }
             stage('Docker Push') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        withCredentials([
-                                usernamePassword(credentialsId: 'docker-credentials',
-                                        usernameVariable: 'USERNAME',
-                                        passwordVariable: 'PASSWORD')]) {
-                            sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
-                        }
+                    withCredentials([
+                            usernamePassword(credentialsId: 'docker-credentials',
+                                    usernameVariable: 'USERNAME',
+                                    passwordVariable: 'PASSWORD')]) {
+                        sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
                     }
                 }
             }

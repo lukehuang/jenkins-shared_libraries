@@ -30,17 +30,17 @@ def call() {
             }
             stage('Compile') {
                 steps {
-                    sh "mvn compile -e"
+                    sh "mvn compile -e -B"
                 }
             }
             stage('Test') {
                 steps {
-                    sh "mvn test -e -Dsurefire.useFile=false"
+                    sh "mvn test -e -B -Dsurefire.useFile=false"
                 }
             }
             stage('Package') {
                 steps {
-                    sh "mvn package -DskipTests=true -e"
+                    sh "mvn package -DskipTests=true -e -B"
                 }
             }
         }
