@@ -12,16 +12,28 @@ def call(String buildStatus = 'STARTED') {
     def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
     def title_link = "${env.BUILD_URL})"
     def message = "Current status: ${buildStatus}"
+    def color = ''
 
     // Override default values based on build status
     if (buildStatus == 'STARTED') {
-        colorCode = 'warning'
+        color = 'warning'
     } else if (buildStatus == 'SUCCESS') {
-        colorCode = 'good'
+        color = 'good'
     } else {
-        colorCode = 'danger'
+        color = 'danger'
     }
 
+    def attachments = [
+            [
+                    pretext: pretext,
+                    title: title,
+                    title_link: title_link,
+                    color: color,
+                    message: message
+            ]
+    ]
+
     // Send notifications
-    slackSend (color: colorCode, pretext:pretext, title: title, title_link: title_link, message: message)
+//    slackSend (color: colorCode, pretext:pretext, title: title, title_link: title_link, message: message)
+    slackSend (attachments)
 }
