@@ -2,15 +2,15 @@
 
 def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
     pipeline {
-        agent any
-
-        options {
-            // Only keep the 10 most recent builds
-            buildDiscarder(logRotator(numToKeepStr: '10'))
-            disableConcurrentBuilds()
-        }
-
         ansiColor("xterm") {
+            agent any
+
+            options {
+                // Only keep the 10 most recent builds
+                buildDiscarder(logRotator(numToKeepStr: '10'))
+                disableConcurrentBuilds()
+            }
+
             stages {
                 stage('Start') {
                     steps {
