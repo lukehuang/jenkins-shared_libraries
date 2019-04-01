@@ -35,5 +35,5 @@ def call(String buildStatus = 'STARTED') {
 
     // Send notifications
 //    slackSend (color: colorCode, pretext:pretext, title: title, title_link: title_link, message: message)
-    slackSend (attachments)
+    slackSend (attachments: attachments)
 }
