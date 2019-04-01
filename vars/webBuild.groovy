@@ -13,17 +13,23 @@ def call(String dockerBuild) {
 
         stages {
             stage('Start') {
-                sendNotifications 'STARTED'
+                steps {
+                    sendNotifications 'STARTED'
+                }
             }
 
             stage('Build image') {
-                containerImage = docker.build("$dockerBuild", "--no-cache .")
+                steps {
+                    containerImage = docker.build("$dockerBuild", "--no-cache .")
+                }
             }
 
             stage('Push image') {
-                docker.withRegistry('', 'docker-credentials') {
-                    containerImage.push("latest")
-                    containerImage.push("${BUILD_NUMBER}")
+                steps {
+                    docker.withRegistry('', 'docker-credentials') {
+                        containerImage.push("latest")
+                        containerImage.push("${BUILD_NUMBER}")
+                    }
                 }
             }
         }
