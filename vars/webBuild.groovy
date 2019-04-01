@@ -1,4 +1,5 @@
 #!groovy
+
 def call(String dockerBuild) {
     node {
         options {
@@ -8,18 +9,28 @@ def call(String dockerBuild) {
             ansiColor('xterm')
         }
 
-        stage ('Checkout') {
+        stage('Start') {
+            sendNotifications 'STARTED'
+        }
+
+        stage('Checkout') {
             checkout scm
         }
 
-        stage ('Build image') {
+        stage('Build image') {
             containerImage = docker.build("$dockerBuild", "--no-cache .")
         }
 
-        stage ('Push image') {
-            docker.withRegistry('','docker-credentials') {
+        stage('Push image') {
+            docker.withRegistry('', 'docker-credentials') {
                 containerImage.push("latest")
                 containerImage.push("${BUILD_NUMBER}")
+            }
+        }
+
+        post {
+            always {
+                sendNotifications currentBuild.result
             }
         }
     }
