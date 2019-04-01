@@ -1,6 +1,6 @@
-#!groovy
+#!/usr/bin/env groovy
 
-def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
+def call() {
     pipeline {
         agent any
 
@@ -25,32 +25,27 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Clean') {
                 steps {
-                    sh "mvn clean -e"
+                    sh "mvn clean -e -B"
                 }
             }
-            stage('Compile') {
+            stage('Package') {
                 steps {
-                    sh "mvn compile -e -B"
+                    sh "mvn package -e -B"
                 }
             }
-            stage('Test') {
+            stage('Docker Build') {
                 steps {
-                    sh "mvn test -e -B -Dsurefire.useFile=false"
+                    sh "mvn dockerfile:build -e -B"
                 }
             }
-            stage('Analyse') {
+            stage('Docker Push') {
                 steps {
-                    sh "mvn sonar:sonar \
-                                  -Dsonar.projectKey=${sonarProjectKey} \
-                                  -Dsonar.organization=${sonarOrganization} \
-                                  -Dsonar.host.url=https://sonarcloud.io \
-                                  -Dsonar.login=${sonarToken} \
-                                  -e -B"
-                }
-            }
-            stage('Install') {
-                steps {
-                    sh "mvn install -Dmaven.test.skip=true -e -B"
+                    withCredentials([
+                            usernamePassword(credentialsId: 'docker-credentials',
+                                    usernameVariable: 'USERNAME',
+                                    passwordVariable: 'PASSWORD')]) {
+                        sh "mvn dockerfile:push -e -B -Ddockerfile.username=$USERNAME -Ddockerfile.password=$PASSWORD"
+                    }
                 }
             }
         }
