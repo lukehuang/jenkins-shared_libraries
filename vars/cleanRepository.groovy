@@ -12,20 +12,15 @@ def call() {
         }
 
         stages {
-            stage('Clean') {
+            stage('Clean Repo') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh 'mvn --version'
-                    }
+                    sh 'rm -f /root/.m2/repository'
                 }
             }
         }
 
         post {
-            always {
+            failure {
                 sendNotifications currentBuild.result
             }
         }
