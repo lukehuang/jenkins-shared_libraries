@@ -12,9 +12,14 @@ def call() {
         }
 
         stages {
-            stage('Clean Repo') {
+            stage('Clean Repository') {
                 steps {
                     sh 'rm -rf /root/.m2/repository'
+                }
+            }
+            stage('Clean Docker') {
+                steps {
+                    sh 'docker system prune -af'
                 }
             }
         }
