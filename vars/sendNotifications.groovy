@@ -10,7 +10,7 @@ def call(String buildStatus = 'STARTED') {
     // Default values
     def pretext= 'Job change of state'
     def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
-    def title_link = "${env.BUILD_URL})"
+    def title_link = "${env.BUILD_URL}"
     def message = "Current status: ${buildStatus}"
     def color = ''
 
@@ -35,5 +35,5 @@ def call(String buildStatus = 'STARTED') {
     ]
 
     // Send notifications
-    slackSend (attachments: attachments)
+    slackSend(attachments: attachments)
 }
