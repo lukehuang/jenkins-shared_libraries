@@ -4,6 +4,11 @@ def call() {
     pipeline {
         agent any
 
+        tools {
+            maven 'Default'
+            jdk 'Default'
+        }
+
         options {
             // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -20,42 +25,22 @@ def call() {
             }
             stage('Clean') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'Default'
-                    ) {
-                        sh "mvn clean -e"
-                    }
+                    sh "mvn clean -e"
                 }
             }
             stage('Compile') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'Default'
-                    ) {
-                        sh "mvn compile -e"
-                    }
+                    sh "mvn compile -e"
                 }
             }
             stage('Test') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'Default'
-                    ) {
-                        sh "mvn test -e -Dsurefire.useFile=false"
-                    }
+                    sh "mvn test -e -Dsurefire.useFile=false"
                 }
             }
             stage('Package') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'Default'
-                    ) {
-                        sh "mvn package -DskipTests=true -e"
-                    }
+                    sh "mvn package -DskipTests=true -e"
                 }
             }
         }
