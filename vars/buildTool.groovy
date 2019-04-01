@@ -21,10 +21,6 @@ def call() {
                 steps {
                     // send build started notifications
                     sendNotifications 'STARTED'
-                }
-            }
-            stage('Clean') {
-                steps {
                     sh "mvn clean -e -B"
                 }
             }
