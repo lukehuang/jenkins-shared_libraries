@@ -21,10 +21,6 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     // send build started notifications
                     sendNotifications 'STARTED'
-                }
-            }
-            stage('Clean') {
-                steps {
                     sh "mvn clean -e -B"
                 }
             }
