@@ -11,6 +11,10 @@ def call(String dockerBuild) {
             ansiColor('xterm')
         }
 
+        environment {
+            def containerImage
+        }
+
         stages {
             stage('Start') {
                 steps {
