@@ -4,6 +4,11 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
     pipeline {
         agent any
 
+        tools {
+            maven 'Default'
+            jdk 'OpenJ9'
+        }
+
         options {
             // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '10'))
@@ -20,57 +25,32 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Clean') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn clean -e"
-                    }
+                    sh "mvn clean -e"
                 }
             }
             stage('Compile') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn compile -e"
-                    }
+                    sh "mvn compile -e -B"
                 }
             }
             stage('Test') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn test -e -Dsurefire.useFile=false"
-                    }
+                    sh "mvn test -e -B -Dsurefire.useFile=false"
                 }
             }
             stage('Analyse') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn sonar:sonar \
+                    sh "mvn sonar:sonar \
                                   -Dsonar.projectKey=${sonarProjectKey} \
                                   -Dsonar.organization=${sonarOrganization} \
                                   -Dsonar.host.url=https://sonarcloud.io \
                                   -Dsonar.login=${sonarToken} \
-                                  -e "
-                    }
+                                  -e -B"
                 }
             }
             stage('Install') {
                 steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        sh "mvn install -Dmaven.test.skip=true -e "
-                    }
+                    sh "mvn install -Dmaven.test.skip=true -e -B"
                 }
             }
         }
