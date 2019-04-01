@@ -8,7 +8,7 @@ def call(String buildStatus = 'STARTED') {
     buildStatus = buildStatus ?: 'SUCCESS'
 
     // Default values
-    def pretext= 'Build status'
+    def pretext= 'Job change of state'
     def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
     def title_link = "${env.BUILD_URL})"
     def message = "Current status: ${buildStatus}"
@@ -25,15 +25,15 @@ def call(String buildStatus = 'STARTED') {
 
     def attachments = [
             [
+                    fallback: "${pretext} - ${title}",
                     pretext: pretext,
                     title: title,
                     title_link: title_link,
                     color: color,
-                    message: message
+                    text: message
             ]
     ]
 
     // Send notifications
-//    slackSend (color: colorCode, pretext:pretext, title: title, title_link: title_link, message: message)
     slackSend (attachments: attachments)
 }
