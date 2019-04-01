@@ -14,7 +14,7 @@ def call() {
         stages {
             stage('Clean Repo') {
                 steps {
-                    sh 'rm -f /root/.m2/repository'
+                    sh 'rm -rf /root/.m2/repository'
                 }
             }
         }
