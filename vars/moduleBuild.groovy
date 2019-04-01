@@ -33,23 +33,19 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                     sh "mvn compile -e -B"
                 }
             }
-            stage('Quality') {
-                stages {
-                    stage('Test') {
-                        steps {
-                            sh "mvn test -e -B -Dsurefire.useFile=false"
-                        }
-                    }
-                    stage('Analyse') {
-                        steps {
-                            sh "mvn sonar:sonar \
+            stage('Test') {
+                steps {
+                    sh "mvn test -e -B -Dsurefire.useFile=false"
+                }
+            }
+            stage('Analyse') {
+                steps {
+                    sh "mvn sonar:sonar \
                                   -Dsonar.projectKey=${sonarProjectKey} \
                                   -Dsonar.organization=${sonarOrganization} \
                                   -Dsonar.host.url=https://sonarcloud.io \
                                   -Dsonar.login=${sonarToken} \
                                   -e -B"
-                        }
-                    }
                 }
             }
             stage('Install') {
