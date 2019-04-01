@@ -6,77 +6,69 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
 
         options {
             // Only keep the 10 most recent builds
-            buildDiscarder(logRotator(numToKeepStr:'10'))
+            buildDiscarder(logRotator(numToKeepStr: '10'))
             disableConcurrentBuilds()
         }
 
-        stages {
-            stage ('Start') {
-                steps {
-                    // send build started notifications
-                    sendNotifications 'STARTED'
+        ansiColor("xterm") {
+            stages {
+                stage('Start') {
+                    steps {
+                        // send build started notifications
+                        sendNotifications 'STARTED'
+                    }
                 }
-            }
-            stage('Clean') {
-                steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        ansiColor("xterm") {
+                stage('Clean') {
+                    steps {
+                        withMaven(
+                                maven: 'Default',
+                                jdk: 'OpenJ9'
+                        ) {
                             sh "mvn clean -e"
                         }
                     }
                 }
-            }
-            stage('Compile') {
-                steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        ansiColor("xterm") {
+                stage('Compile') {
+                    steps {
+                        withMaven(
+                                maven: 'Default',
+                                jdk: 'OpenJ9'
+                        ) {
                             sh "mvn compile -e"
                         }
                     }
                 }
-            }
-            stage('Test') {
-                steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        ansiColor("xterm") {
+                stage('Test') {
+                    steps {
+                        withMaven(
+                                maven: 'Default',
+                                jdk: 'OpenJ9'
+                        ) {
                             sh "mvn test -e -Dsurefire.useFile=false"
                         }
                     }
                 }
-            }
-            stage('Analyse') {
-                steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        ansiColor("xterm") {
+                stage('Analyse') {
+                    steps {
+                        withMaven(
+                                maven: 'Default',
+                                jdk: 'OpenJ9'
+                        ) {
                             sh "mvn sonar:sonar \
-                              -Dsonar.projectKey=${sonarProjectKey} \
-                              -Dsonar.organization=${sonarOrganization} \
-                              -Dsonar.host.url=https://sonarcloud.io \
-                              -Dsonar.login=${sonarToken} \
-                              -e "
+                                  -Dsonar.projectKey=${sonarProjectKey} \
+                                  -Dsonar.organization=${sonarOrganization} \
+                                  -Dsonar.host.url=https://sonarcloud.io \
+                                  -Dsonar.login=${sonarToken} \
+                                  -e "
                         }
                     }
                 }
-            }
-            stage('Install') {
-                steps {
-                    withMaven(
-                            maven: 'Default',
-                            jdk: 'OpenJ9'
-                    ) {
-                        ansiColor("xterm") {
+                stage('Install') {
+                    steps {
+                        withMaven(
+                                maven: 'Default',
+                                jdk: 'OpenJ9'
+                        ) {
                             sh "mvn install -Dmaven.test.skip=true -e "
                         }
                     }
