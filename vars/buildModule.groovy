@@ -35,7 +35,12 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Analyse') {
                 steps {
-                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
+//                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
+                    sh "mvn sonar:sonar \
+                          -Dsonar.projectKey=${sonarProjectKey} \
+                          -Dsonar.organization=${sonarOrganization} \
+                          -Dsonar.host.url=https://sonarcloud.io \
+                          -Dsonar.login=${sonarToken}"
                 }
             }
             stage('Publish') {
