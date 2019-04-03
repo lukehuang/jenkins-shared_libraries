@@ -20,17 +20,17 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     // send build started notifications
                     sendNotifications 'STARTED'
-                    gradle "clean"
+                    gradle 'clean'
                 }
             }
             stage('Assemble') {
                 steps {
-                    gradle "assemble"
+                    gradle 'assemble'
                 }
             }
             stage('Test') {
                 steps {
-                    gradle "test"
+                    gradle 'test'
                 }
             }
             stage('Analyse') {
@@ -40,7 +40,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Publish') {
                 steps {
-                    gradle "publishToMavenLocal"
+                    gradle 'publishToMavenLocal'
                 }
             }
         }
