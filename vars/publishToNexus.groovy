@@ -7,6 +7,6 @@ def call() {
                       credentialsId: nexusCredentialsId,
                       usernameVariable: 'ORG_GRADLE_PROJECT_nexusUsername',
                       passwordVariable: 'ORG_GRADLE_PROJECT_nexusPassword']]) {
-        sh '/gradlew publish'
+        sh './gradlew publish'
     }
 }
