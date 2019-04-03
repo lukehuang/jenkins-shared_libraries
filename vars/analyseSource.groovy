@@ -1,4 +1,4 @@
-
+#!/usr/bin/env groovy
 
 def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
     sh "mvn sonar:sonar \

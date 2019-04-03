@@ -36,7 +36,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage('Analyse') {
                 steps {
 //                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
-                    sh "mvn sonar:sonar \
+                    sh "./gradlew sonarqube \
                           -Dsonar.projectKey=${sonarProjectKey} \
                           -Dsonar.organization=${sonarOrganization} \
                           -Dsonar.host.url=https://sonarcloud.io \
