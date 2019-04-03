@@ -25,12 +25,12 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Assemble') {
                 steps {
-                    gradle 'assemble'
+                    sh './gradlew assemble'
                 }
             }
             stage('Test') {
                 steps {
-                    gradle 'test'
+                    sh './gradlew test'
                 }
             }
             stage('Analyse') {
@@ -40,7 +40,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Publish') {
                 steps {
-                    gradle 'publishToMavenLocal'
+                    sh './gradlew publishToMavenLocal'
                 }
             }
         }
