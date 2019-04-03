@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
 
-// Upload to Nexus
 def call() {
     withCredentials([[$class: 'UsernamePasswordMultiBinding',
                       credentialsId: 'nexus',
