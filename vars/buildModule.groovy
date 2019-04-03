@@ -5,7 +5,6 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
         agent any
 
         tools {
-            maven 'Default'
             jdk 'OpenJ9'
         }
 
@@ -21,17 +20,17 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 steps {
                     // send build started notifications
                     sendNotifications 'STARTED'
-                    sh "mvn clean -e"
+                    sh "gradle clean"
                 }
             }
-            stage('Compile') {
+            stage('Assemble') {
                 steps {
-                    sh "mvn compile -e -B"
+                    sh "gradle assemble"
                 }
             }
             stage('Test') {
                 steps {
-                    sh "mvn test -e -B -Dsurefire.useFile=false"
+                    sh "gradle test"
                 }
             }
             stage('Analyse') {
@@ -41,7 +40,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
             stage('Install') {
                 steps {
-                    sh "mvn install -Dmaven.test.skip=true -e -B"
+                    sh "gradle publishToMavenLocal"
                 }
             }
         }
