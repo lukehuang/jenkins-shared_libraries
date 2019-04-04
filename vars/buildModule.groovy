@@ -19,40 +19,41 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage('Start') {
                 steps {
                     // send build started notifications
-                    sendNotifications 'STARTED'
+//                    sendNotifications 'STARTED'
                     sh './gradlew clean'
                 }
             }
             stage('Assemble') {
                 steps {
+                    echo "gradle version : ${ORG_GRADLE_PROJECT_version}"
                     sh './gradlew assemble'
                 }
             }
-            stage('Test') {
-                steps {
-                    sh './gradlew test'
-                }
-            }
-            stage('Analyse') {
-                steps {
-//                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
-                    sh "./gradlew sonarqube \
-                          -Dsonar.projectKey=${sonarProjectKey} \
-                          -Dsonar.organization=${sonarOrganization} \
-                          -Dsonar.host.url=https://sonarcloud.io \
-                          -Dsonar.login=${sonarToken}"
-                }
-            }
-            stage('Publish') {
-                steps {
-                   publishToNexus()
-                }
-            }
+//            stage('Test') {
+//                steps {
+//                    sh './gradlew test'
+//                }
+//            }
+//            stage('Analyse') {
+//                steps {
+////                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
+//                    sh "./gradlew sonarqube \
+//                          -Dsonar.projectKey=${sonarProjectKey} \
+//                          -Dsonar.organization=${sonarOrganization} \
+//                          -Dsonar.host.url=https://sonarcloud.io \
+//                          -Dsonar.login=${sonarToken}"
+//                }
+//            }
+//            stage('Publish') {
+//                steps {
+//                   publishToNexus()
+//                }
+//            }
         }
 
         post {
             always {
-                sendNotifications currentBuild.result
+//                sendNotifications currentBuild.result
             }
         }
     }

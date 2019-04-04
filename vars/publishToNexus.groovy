@@ -6,6 +6,5 @@ def call() {
                       usernameVariable: 'ORG_GRADLE_PROJECT_nexusUsername',
                       passwordVariable: 'ORG_GRADLE_PROJECT_nexusPassword']]) {
         sh './gradlew publish'
-        echo "gradle version : ${ORG_GRADLE_PROJECT_version}"
     }
 }
