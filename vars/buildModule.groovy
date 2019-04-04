@@ -26,7 +26,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage('Assemble') {
                 steps {
                     script {
-                        def version = (readFile('gradle.properties') =~ 'version=(.+)-SNAPSHOT')[0][1]
+                        def version = (readFile('gradle.properties') =~ 'version=(.+)-SNAPSHOT')/*[0][1]*/
                         echo "gradle version : ${version}"
                     }
                     sh './gradlew assemble'
