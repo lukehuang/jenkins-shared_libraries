@@ -28,11 +28,11 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                     sh './gradlew assemble'
                 }
             }
-//            stage('Test') {
-//                steps {
-//                    sh './gradlew test'
-//                }
-//            }
+            stage('Test') {
+                steps {
+                    sh './gradlew test'
+                }
+            }
             stage('Analyse') {
                 steps {
 //                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
