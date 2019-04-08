@@ -7,7 +7,7 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
  */
 def call(RunWrapper currentBuild) {
     // build message
-    def pretext = "${currentBuild.currentResult} : ${currentBuild.fullDisplayName}"
+    def pretext = "${currentBuild.currentResult} : ${currentBuild.fullProjectName}"
     def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
     def title_link = "${env.BUILD_URL}"
     def color = currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger'
