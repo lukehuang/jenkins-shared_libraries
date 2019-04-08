@@ -31,16 +31,16 @@ def call() {
                     sh './gradlew clean'
                 }
             }
-            stage('Assemble') {
-                steps {
+//            stage('Assemble') {
+//                steps {
 //                    sh './gradlew assemble'
-                }
-            }
-            stage('Test') {
-                steps {
+//                }
+//            }
+//            stage('Test') {
+//                steps {
 //                    sh './gradlew test'
-                }
-            }
+//                }
+//            }
             stage('Release') {
                 steps {
                     echo "git tag -a -m \"release ${params.VERSION}\" ${params.VERSION}"
