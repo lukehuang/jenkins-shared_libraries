@@ -44,21 +44,29 @@ def call(RunWrapper currentBuild) {
 @NonCPS
 def getChangeString(RunWrapper currentBuild) {
     MAX_MSG_LEN = 100
-    def changeString = "Change set: "
+    def changeString = "Change set:"
 
     echo "Gathering SCM changes"
-    def changeLogSets = currentBuild.rawBuild.changeSets
+    def changeLogSets = currentBuild.changeSets
     for (int i = 0; i < changeLogSets.size(); i++) {
         def entries = changeLogSets[i].items
+        echo "entries: ${entries}"
         for (int j = 0; j < entries.length; j++) {
             def entry = entries[j]
-            truncated_msg = entry.msg.take(MAX_MSG_LEN)
-            changeString += "\t- ${truncated_msg} [${entry.author}]\n"
+            msg = "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+            echo "${msg}"
+            def files = new ArrayList(entry.affectedFiles)
+            for (int k = 0; k < files.size(); k++) {
+                def file = files[k]
+                echo "  ${file.editType.name} ${file.path}"
+            }
+            truncated_msg = msg.take(MAX_MSG_LEN)
+            changeString += "\n\t- ${truncated_msg}]"
         }
     }
 
     if (!changeString) {
-        changeString = " - No new changes"
+        changeString = " No new changes"
     }
     return changeString
 }
