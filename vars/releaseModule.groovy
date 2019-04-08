@@ -27,31 +27,28 @@ def call() {
                            error("Build failed because of missing version to release")
                        }
                    }
-                    sh 'git fetch'
                     sh './gradlew clean'
                 }
             }
-//            stage('Assemble') {
-//                steps {
-//                    sh './gradlew assemble'
-//                }
-//            }
-//            stage('Test') {
-//                steps {
-//                    sh './gradlew test'
-//                }
-//            }
+            stage('Assemble') {
+                steps {
+                    sh './gradlew assemble'
+                }
+            }
+            stage('Test') {
+                steps {
+                    sh './gradlew test'
+                }
+            }
             stage('Release') {
                 steps {
-                    echo "git tag -a -m \"release ${params.VERSION}\" ${params.VERSION}"
-                    sh "git tag -a -m \"release ${params.VERSION}\" ${params.VERSION}"
-                    sh 'git tag -l'
-//                    sh 'git push --follow-tags origin master'
+                    sh "git tag -af -m \"release ${params.VERSION}\" ${params.VERSION}"
+                    sh 'git push --follow-tags origin master'
                 }
             }
             stage('Publish') {
                 steps {
-//                    publishToNexus()
+                    publishToNexus()
                     sh './gradlew version'
                 }
             }
