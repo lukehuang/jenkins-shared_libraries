@@ -42,14 +42,15 @@ def call() {
             }
             stage('Release') {
                 steps {
+                    sh './gradlew version'
                     sh "git tag -af -m \"release ${params.VERSION}\" ${params.VERSION}"
                     sh 'git push --follow-tags origin master'
+                    sh './gradlew version'
                 }
             }
             stage('Publish') {
                 steps {
                     publishToNexus()
-                    sh './gradlew version'
                 }
             }
         }
