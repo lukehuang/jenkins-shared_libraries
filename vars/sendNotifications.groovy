@@ -29,7 +29,7 @@ def call(RunWrapper currentBuild) {
 
 @NonCPS
 def getCauses(RunWrapper currentBuild) {
-    def causes = "Build causes: ${currentBuild.getBuildCauses()}"
+    def causes = currentBuild!=null ? "Build causes: ${currentBuild.getBuildCauses()}": 'Build causes: unknown'
 
     return causes
 }
