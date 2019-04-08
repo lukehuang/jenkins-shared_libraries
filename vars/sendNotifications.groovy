@@ -7,17 +7,15 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
  */
 def call(RunWrapper currentBuild) {
     // build message
-    def pretext = "${currentBuild.currentResult} : ${currentBuild.fullProjectName}"
-    def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
-    def title_link = "${env.BUILD_URL}"
+    def pretext = "Build ${currentBuild.currentResult} : ${currentBuild.fullProjectName}"
     def color = currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger'
-    def message = getCauses() + "\n" + getChangeString(currentBuild)
+    def message = getChangeString(currentBuild)
     def attachments = [
             [
-                    fallback  : "${pretext} - ${title}",
+                    fallback  : pretext,
                     pretext   : pretext,
-                    title     : title,
-                    title_link: title_link,
+                    title     : currentBuild.fullDisplayName,
+                    title_link: currentBuild.absoluteUrl,
                     color     : color,
                     text      : message
             ]
@@ -25,13 +23,6 @@ def call(RunWrapper currentBuild) {
 
     // Send notifications
     slackSend(attachments: attachments)
-}
-
-@NonCPS
-def getCauses(RunWrapper currentBuild) {
-    def causes = currentBuild!=null ? "Build causes: ${currentBuild.getBuildCauses()}": 'Build causes: unknown'
-
-    return causes
 }
 
 @NonCPS
