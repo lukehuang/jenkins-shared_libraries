@@ -22,7 +22,9 @@ def call() {
         stages {
             stage('Start') {
                 steps {
-                    sendNotifications 'STARTED'
+                    if (params.VERSION == null) {
+                        error("Build failed because of missing version to release")
+                    }
                     sh 'git fetch'
                     sh './gradlew clean'
                 }
@@ -39,7 +41,7 @@ def call() {
             }
             stage('Release') {
                 steps {
-                    sh "./gradlew tag -a ${params.PERSON} -m 'release ${params.PERSON}'"
+                    sh "./gradlew tag -a ${params.VERSION} -m 'release ${params.VERSION}'"
                     sh 'git push --follow-tags origin master'
                 }
             }
@@ -53,7 +55,7 @@ def call() {
 
         post {
             always {
-                sendNotifications currentBuild.result
+                sendNotifications currentBuild
             }
         }
     }
