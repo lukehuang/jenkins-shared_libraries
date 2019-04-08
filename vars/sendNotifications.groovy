@@ -1,5 +1,7 @@
 #!/usr/bin/env groovy
 
+import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
+
 /**
  * Send notifications based on build status string
  */
