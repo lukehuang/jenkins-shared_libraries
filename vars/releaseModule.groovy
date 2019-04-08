@@ -22,9 +22,11 @@ def call() {
         stages {
             stage('Start') {
                 steps {
-                    if (params.VERSION == null) {
-                        error("Build failed because of missing version to release")
-                    }
+                   script {
+                       if (params.VERSION == null) {
+                           error("Build failed because of missing version to release")
+                       }
+                   }
                     sh 'git fetch'
                     sh './gradlew clean'
                 }
