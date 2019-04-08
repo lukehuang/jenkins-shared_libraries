@@ -27,7 +27,7 @@ def call() {
                            error("Build failed because of missing version to release")
                        }
                    }
-                    sh './gradlew clean'
+                    sh './gradlew clean version'
                 }
             }
             stage('Assemble') {
@@ -42,7 +42,6 @@ def call() {
             }
             stage('Release') {
                 steps {
-                    sh './gradlew version'
                     sh "git tag -af -m \"release ${params.VERSION}\" ${params.VERSION}"
                     sh 'git push --follow-tags origin master'
                     sh './gradlew version'
