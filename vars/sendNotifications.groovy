@@ -16,7 +16,8 @@ def call(RunWrapper currentBuild) {
     // Override default values based on build
     if (currentBuild.result == null) {
         color = 'warning'
-        message = "Build causes: ${currentBuild.getBuildCauses()}"
+        message = "\t- Build causes: ${currentBuild.getBuildCauses()}"
+        message += "\n\t- Change set: ${currentBuild.changeSets}"
     } else {
         if (currentBuild.currentResult != 'SUCCESS') {
             color = 'danger'
