@@ -40,7 +40,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             stage ('Release') {
                 when {
                     branch 'master'
-                    expression { params.RELEASE }
+                    expression { return params.RELEASE }
                 }
                 steps {
                     sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
