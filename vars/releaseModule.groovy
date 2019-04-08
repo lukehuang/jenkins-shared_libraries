@@ -33,23 +33,25 @@ def call() {
             }
             stage('Assemble') {
                 steps {
-                    sh './gradlew assemble'
+//                    sh './gradlew assemble'
                 }
             }
             stage('Test') {
                 steps {
-                    sh './gradlew test'
+//                    sh './gradlew test'
                 }
             }
             stage('Release') {
                 steps {
-                    sh "git tag -a -m 'release ${params.VERSION}' ${params.VERSION}"
-                    sh 'git push --follow-tags origin master'
+                    echo "git tag -a -m \"release ${params.VERSION}\" ${params.VERSION}"
+                    sh "git tag -a -m \"release ${params.VERSION}\" ${params.VERSION}"
+                    sh 'git tag -l'
+//                    sh 'git push --follow-tags origin master'
                 }
             }
             stage('Publish') {
                 steps {
-                    publishToNexus()
+//                    publishToNexus()
                     sh './gradlew version'
                 }
             }
