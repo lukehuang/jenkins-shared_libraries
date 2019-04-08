@@ -30,18 +30,18 @@ def getChangeString(RunWrapper currentBuild) {
     MAX_MSG_LEN = 100
     def changeString = "Change set:"
 
-    echo "Gathering SCM changes"
-    def changeLogSets = currentBuild.changeSets
-    for (int i = 0; i < changeLogSets.size(); i++) {
-        def entries = changeLogSets[i].items
-        for (int j = 0; j < entries.length; j++) {
-            def entry = entries[j]
-            changeString += "\n\t- by ${entry.author} on ${entry.date}: ${entry.msg}"
+    if (changeLogSets.size == 0) {
+        changeString += " No new changes"
+    } else {
+        def changeLogSets = currentBuild.changeSets
+        for (int i = 0; i < changeLogSets.size(); i++) {
+            def entries = changeLogSets[i].items
+            for (int j = 0; j < entries.length; j++) {
+                def entry = entries[j]
+                changeString += "\n\t- by ${entry.author} on ${entry.date}: ${entry.msg}"
+            }
         }
     }
 
-    if (!changeString) {
-        changeString = " No new changes"
-    }
     return changeString
 }
