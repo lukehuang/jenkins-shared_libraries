@@ -7,7 +7,7 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
  */
 def call(RunWrapper currentBuild) {
     // build message
-    def pretext = "Build ${currentBuild.currentResult} : ${currentBuild.fullProjectName}"
+    def pretext = "Build ${currentBuild.currentResult} for ${currentBuild.fullProjectName}"
     def color = currentBuild.currentResult == 'SUCCESS' ? '#00FF00' : '#FF0000'
     def message = getChangeString(currentBuild)
     def attachments = [
