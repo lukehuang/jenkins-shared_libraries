@@ -11,17 +11,16 @@ def call(RunWrapper currentBuild) {
     def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
     def title_link = "${env.BUILD_URL}"
     def color = 'good'
-    def message = ''
+    def message = "Build causes: ${currentBuild.getBuildCauses()}"
+    message += "\n" + getChangeString(currentBuild)
 
     // Override default values based on build
     if (currentBuild.result == null) {
         color = 'warning'
-        message = "Build causes: ${currentBuild.getBuildCauses()}"
-        message += "\n" + getChangeString(currentBuild)
     } else {
         if (currentBuild.currentResult != 'SUCCESS') {
             color = 'danger'
-            message = currentBuild.rawBuild.getLog(10)
+            message += '\nError: ' + currentBuild.rawBuild.getLog(10)
         }
     }
 
