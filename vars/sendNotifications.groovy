@@ -1,7 +1,5 @@
 #!/usr/bin/env groovy
 
-import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
-
 /**
  * Send notifications based on build status string
  */
@@ -10,22 +8,19 @@ def call(RunWrapper currentBuild) {
     def pretext = 'Job change of state'
     def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
     def title_link = "${env.BUILD_URL}"
-    def color = ''
-    def message= ''
+    def color = 'good'
+    def message = ''
 
     // Override default values based on build
     if (currentBuild.result == null) {
         color = 'warning'
-        message = currentBuild.getBuildCauses()['shortDescription']
+        message = currentBuild.getBuildCauses()
     } else {
-        if (currentBuild.currentResult == 'SUCCESS') {
-            color = 'good'
-        } else {
+        if (currentBuild.currentResult != 'SUCCESS') {
             color = 'danger'
+            message = currentBuild.rawBuild.getLog(10)
         }
     }
-
-
 
     def attachments = [
             [
