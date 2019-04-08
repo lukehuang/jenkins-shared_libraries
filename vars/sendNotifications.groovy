@@ -6,24 +6,11 @@ import org.jenkinsci.plugins.workflow.support.steps.build.RunWrapper
  * Send notifications based on build status string
  */
 def call(RunWrapper currentBuild) {
-    // Default values
-    def pretext = 'Job change of state'
+    def pretext = "${currentBuild.currentResult} : ${currentBuild.projectName}"
     def title = "${env.JOB_NAME}#${env.BUILD_NUMBER}"
     def title_link = "${env.BUILD_URL}"
-    def color = 'good'
-    def message = "Build causes: ${currentBuild.getBuildCauses()}"
-    message += "\n" + getChangeString(currentBuild)
-
-    // Override default values based on build
-    if (currentBuild.result == null) {
-        color = 'warning'
-    } else {
-        if (currentBuild.currentResult != 'SUCCESS') {
-            color = 'danger'
-            message += '\nError: ' + currentBuild.rawBuild.getLog(10)
-        }
-    }
-
+    def color = currentBuild.currentResult == 'SUCCESS' ? 'good' : 'danger'
+    def message = getCauses() + "\n" + getChangeString(currentBuild)
     def attachments = [
             [
                     fallback  : "${pretext} - ${title}",
@@ -39,6 +26,12 @@ def call(RunWrapper currentBuild) {
     slackSend(attachments: attachments)
 }
 
+@NonCPS
+def getCauses(RunWrapper currentBuild) {
+    def causes = "Build causes: ${currentBuild.getBuildCauses()}"
+
+    return causes
+}
 
 @NonCPS
 def getChangeString(RunWrapper currentBuild) {
