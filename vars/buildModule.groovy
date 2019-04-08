@@ -18,10 +18,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
         stages {
             stage('Start') {
                 steps {
-                    // send build started notifications
-                    sendNotifications currentBuild
                     sh 'git fetch'
-                    sh 'git tag -l'
                     sh './gradlew clean'
                 }
             }
