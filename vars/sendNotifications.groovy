@@ -30,7 +30,7 @@ def getChangeString(RunWrapper currentBuild) {
     MAX_MSG_LEN = 100
     def changeString = "Change set:"
 
-    if (changeLogSets.size == 0) {
+    if (currentBuild.changeLogSets.size == 0) {
         changeString += " No new changes"
     } else {
         def changeLogSets = currentBuild.changeSets
