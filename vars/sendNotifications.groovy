@@ -50,18 +50,17 @@ def getChangeString(RunWrapper currentBuild) {
     def changeLogSets = currentBuild.changeSets
     for (int i = 0; i < changeLogSets.size(); i++) {
         def entries = changeLogSets[i].items
-        echo "entries: ${entries}"
         for (int j = 0; j < entries.length; j++) {
             def entry = entries[j]
-            msg = "${entry.commitId} by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
+            echo entry
+            msg = "by ${entry.author} on ${new Date(entry.timestamp)}: ${entry.msg}"
             echo "${msg}"
             def files = new ArrayList(entry.affectedFiles)
             for (int k = 0; k < files.size(); k++) {
                 def file = files[k]
-                echo "  ${file.editType.name} ${file.path}"
+                msg += "  ${file.editType.name} ${file.path}"
             }
-            truncated_msg = msg.take(MAX_MSG_LEN)
-            changeString += "\n\t- ${truncated_msg}]"
+            changeString += "\n\t- ${msg}]"
         }
     }
 
