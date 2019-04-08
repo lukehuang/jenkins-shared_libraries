@@ -19,8 +19,6 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
         stages {
             stage('Start') {
                 steps {
-                    // send build started notifications
-                    sendNotifications 'STARTED'
                     sh "mvn clean -e -B"
                 }
             }
@@ -58,7 +56,7 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
 
         post {
             always {
-                sendNotifications currentBuild.result
+                sendNotifications currentBuild
             }
         }
     }
