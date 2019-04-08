@@ -24,12 +24,12 @@ def call() {
             }
             stage('Package') {
                 steps {
-                    sh "mvn package -e -B"
+                    sh "mvn package -e -B -Dstyle.color=always"
                 }
             }
             stage('Docker Build') {
                 steps {
-                    sh "mvn dockerfile:build -e -B"
+                    sh "mvn dockerfile:build -e -B -Dstyle.color=always"
                 }
             }
             stage('Docker Push') {
