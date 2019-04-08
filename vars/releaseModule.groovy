@@ -16,7 +16,7 @@ def call() {
         }
 
         parameters {
-            string(name: 'VERSION', defaultValue: 'X.Y.Z', description: 'What is the new version to release ?')
+            string(name: 'VERSION', description: 'What is the new version to release ?')
         }
 
         stages {
