@@ -15,9 +15,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             ansiColor('xterm')
         }
 
-        parameters {
-            string(name: 'VERSION', description: 'What is the new version to release ?')
-        }
+//        parameters {
+//            string(name: 'VERSION', description: 'What is the new version to release ?')
+//        }
 
         stages {
             stage('Start') {
@@ -37,17 +37,18 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
                 }
             }
 
-            stage('Release') {
-                when {
-                    branch 'master'
-                    expression { return params.VERSION }
-                }
-                steps {
-                    sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
-                    sh "git push ${params.VERSION}:${params.VERSION}"
-                    sh './gradlew version'
-                }
-            }
+//            stage('Release') {
+//                when {
+//                    branch 'master'
+//                    expression { return params.VERSION }
+//                }
+//                steps {
+//                    sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
+//                    sh 'git tag -l'
+//                    sh "git push ${params.VERSION}:${params.VERSION}"
+//                    sh './gradlew version'
+//                }
+//            }
 
             stage('Analyse') {
                 steps {
