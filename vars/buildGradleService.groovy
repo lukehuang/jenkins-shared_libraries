@@ -60,6 +60,7 @@ def call(String sonarProjectKey) {
         post {
             always {
                 sendNotifications currentBuild
+                sh 'JENKINS_NODE_COOKIE=dontKillMe'
             }
         }
     }
