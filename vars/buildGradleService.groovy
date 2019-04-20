@@ -1,11 +1,10 @@
 #!/usr/bin/env groovy
 
-def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
+def call(String sonarProjectKey) {
     pipeline {
         agent any
 
         tools {
-            maven 'Default'
             jdk 'OpenJ9'
         }
 
@@ -15,40 +14,40 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             ansiColor('xterm')
         }
 
+        environment {
+            SONAR_LOGIN = credentials("SONAR_${sonarProjectKey}")
+            DOCKER = credentials('docker-credentials')
+        }
+
         stages {
             stage('Start') {
                 steps {
-                    sh "mvn clean -e -B"
+                    sh './gradlew clean'
                 }
             }
-            stage('Compile') {
+            stage('Assemble') {
                 steps {
-                    sh "mvn compile -e -B"
+                    sh './gradlew assemble'
                 }
             }
             stage('Test') {
                 steps {
-                    sh "mvn test -e -B -Dsurefire.useFile=false"
+                    sh './gradlew test'
                 }
             }
             stage('Analyse') {
                 steps {
-                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
-                }
-            }
-            stage('Package') {
-                steps {
-                    sh "mvn package -DskipTests=true -e -B"
+                    sh "./gradlew sonarqube \
+                          -Dsonar.projectKey=${sonarProjectKey} \
+                          -Dsonar.organization=frogdevelopment \
+                          -Dsonar.host.url=https://sonarcloud.io \
+                          -Dsonar.login=${SONAR_LOGIN} \
+                          -x test"
                 }
             }
             stage('Docker Build') {
                 steps {
-                    sh "mvn dockerfile:build -e -B"
-                }
-            }
-            stage('Docker Push') {
-                steps {
-                    dockerize()
+                    sh "./gradlew jib -Djib.to.auth.username=$DOCKER_USR -Djib.to.auth.password=$DOCKER_PSW"
                 }
             }
         }
