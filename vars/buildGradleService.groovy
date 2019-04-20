@@ -52,7 +52,7 @@ def call(String sonarProjectKey) {
                                 -Djib.to.auth.password=$DOCKER_PSW \
                                 -Djib.to.tags=${getGitBranchName()} \
                                 -Djib.console='plain' \
-                                   -x bootBuildInfo"
+                                -x bootBuildInfo"
                 }
             }
         }
