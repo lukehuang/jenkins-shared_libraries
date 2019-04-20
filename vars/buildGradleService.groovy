@@ -47,7 +47,11 @@ def call(String sonarProjectKey) {
             }
             stage('Docker Build') {
                 steps {
-                    sh "./gradlew jib -Djib.to.auth.username=$DOCKER_USR -Djib.to.auth.password=$DOCKER_PSW"
+                    sh "./gradlew jib \
+                                -Djib.to.auth.username=$DOCKER_USR \
+                                -Djib.to.auth.password=$DOCKER_PSW \
+                                -D.jib.to.tags=${getGitBranchName()} \
+                                -D.jib.console='plain'"
                 }
             }
         }
@@ -58,4 +62,9 @@ def call(String sonarProjectKey) {
             }
         }
     }
+}
+
+
+def getGitBranchName() {
+    return scm.branches[0].name
 }
