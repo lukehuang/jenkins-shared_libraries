@@ -42,7 +42,7 @@ def call(String sonarProjectKey) {
                           -Dsonar.organization=frogdevelopment \
                           -Dsonar.host.url=https://sonarcloud.io \
                           -Dsonar.login=${SONAR_LOGIN} \
-                          -x test"
+                          -x bootBuildInfo test"
                 }
             }
             stage('Docker Build') {
@@ -50,8 +50,9 @@ def call(String sonarProjectKey) {
                     sh "./gradlew jib \
                                 -Djib.to.auth.username=$DOCKER_USR \
                                 -Djib.to.auth.password=$DOCKER_PSW \
-                                -D.jib.to.tags=${getGitBranchName()} \
-                                -D.jib.console='plain'"
+                                -Djib.to.tags=${getGitBranchName()} \
+                                -Djib.console='plain' \
+                                   -x bootBuildInfo"
                 }
             }
         }
