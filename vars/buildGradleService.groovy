@@ -32,7 +32,7 @@ def call(String sonarProjectKey) {
             }
             stage('Test') {
                 steps {
-                    sh './gradlew test'
+                    sh './gradlew test -x bootBuildInfo'
                 }
             }
             stage('Analyse') {
