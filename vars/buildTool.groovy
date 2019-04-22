@@ -5,36 +5,34 @@ def call() {
         agent any
 
         tools {
-            maven 'Default'
             jdk 'OpenJ9'
         }
 
         options {
-            // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '10'))
             disableConcurrentBuilds()
             ansiColor('xterm')
         }
 
+        environment {
+            DOCKER = credentials('docker-credentials')
+        }
+
         stages {
-            stage('Start') {
+            stage('Jar Build') {
                 steps {
-                    sh "mvn clean -e -B"
+                    sh './gradlew clean bootJar'
                 }
             }
-            stage('Package') {
-                steps {
-                    sh "mvn package -e -B -Dstyle.color=always"
-                }
-            }
+
             stage('Docker Build') {
                 steps {
-                    sh "mvn dockerfile:build -e -B -Dstyle.color=always"
-                }
-            }
-            stage('Docker Push') {
-                steps {
-                    dockerize()
+                    sh "./gradlew jib \
+                                -Djib.to.auth.username=$DOCKER_USR \
+                                -Djib.to.auth.password=$DOCKER_PSW \
+                                -Djib.to.tags=${getGitBranchName()} \
+                                -Djib.console='plain' \
+                                -x bootBuildInfo"
                 }
             }
         }
@@ -45,4 +43,8 @@ def call() {
             }
         }
     }
+}
+
+def getGitBranchName() {
+    return scm.branches[0].name
 }
