@@ -1,6 +1,6 @@
 #!/usr/bin/env groovy
 
-def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
+def call(String sonarProjectKey) {
     pipeline {
         agent any
 
@@ -9,10 +9,13 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
         }
 
         options {
-            // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '10'))
             disableConcurrentBuilds()
             ansiColor('xterm')
+        }
+
+        environment {
+            SONAR_TOKEN = credentials("SONAR_${sonarProjectKey}")
         }
 
 //        parameters {
@@ -55,9 +58,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
 //                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
                     sh "./gradlew sonarqube \
                           -Dsonar.projectKey=${sonarProjectKey} \
-                          -Dsonar.organization=${sonarOrganization} \
+                          -Dsonar.organization=frogdevelopment \
                           -Dsonar.host.url=https://sonarcloud.io \
-                          -Dsonar.login=${sonarToken}"
+                          -Dsonar.login=${SONAR_TOKEN}"
                 }
             }
 

@@ -15,7 +15,7 @@ def call(String sonarProjectKey) {
         }
 
         environment {
-            SONAR_LOGIN = credentials("SONAR_${sonarProjectKey}")
+            SONAR_TOKEN = credentials("SONAR_${sonarProjectKey}")
             DOCKER = credentials('docker-credentials')
         }
 
@@ -41,7 +41,7 @@ def call(String sonarProjectKey) {
                           -Dsonar.projectKey=${sonarProjectKey} \
                           -Dsonar.organization=frogdevelopment \
                           -Dsonar.host.url=https://sonarcloud.io \
-                          -Dsonar.login=${SONAR_LOGIN} \
+                          -Dsonar.login=${SONAR_TOKEN} \
                           -x bootBuildInfo test"
                 }
             }
