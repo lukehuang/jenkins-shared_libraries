@@ -20,14 +20,9 @@ def call(String sonarProjectKey) {
         }
 
         stages {
-            stage('Start') {
+            stage('Build Jar') {
                 steps {
-                    sh './gradlew clean'
-                }
-            }
-            stage('Assemble') {
-                steps {
-                    sh './gradlew assemble'
+                    sh './gradlew clean bootJar'
                 }
             }
             stage('Test') {
