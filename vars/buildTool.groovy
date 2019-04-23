@@ -25,6 +25,12 @@ def call() {
                 }
             }
 
+            stage('Test') {
+                steps {
+                    sh './gradlew test'
+                }
+            }
+
             stage('Docker Build') {
                 steps {
                     sh "./gradlew jib \
