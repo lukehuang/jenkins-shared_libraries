@@ -49,7 +49,7 @@ def call(String sonarProjectKey) {
 
             stage('Publish') {
                 steps {
-                    sh "./gradlew publish -DnexusUsername=$NEXUS_USR -DnexusPassword=$NEXUS_PWD"
+                    sh "./gradlew publish -DnexusUsername=$NEXUS_USR -DnexusPassword=$NEXUS_PSW"
                 }
             }
         }
