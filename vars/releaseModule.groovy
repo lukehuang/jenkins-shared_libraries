@@ -65,13 +65,14 @@ def call() {
         }
 
         post {
-            always {
-                sendNotifications currentBuild
-            }
 
             failure {
                 echo 'Deleting failed tag'
                 sh "git tag -d ${params.VERSION}"
+            }
+
+            changed {
+                sendNotifications currentBuild
             }
         }
     }
