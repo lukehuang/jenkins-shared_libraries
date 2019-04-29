@@ -46,7 +46,9 @@ def call() {
             }
             stage('Release') {
                 steps {
+                    sh "git tag --list"
                     sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
+                    sh "git tag --list"
                     sh './gradlew version'
                     sh 'git push --follow-tags'
                 }

@@ -1,11 +1,10 @@
 #!/usr/bin/env groovy
 
-def call(String sonarProjectKey, String sonarToken, String sonarOrganization = 'frogdevelopment') {
+def call(String sonarProjectKey) {
     pipeline {
         agent any
 
         tools {
-            maven 'Default'
             jdk 'OpenJ9'
         }
 
@@ -15,40 +14,40 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             ansiColor('xterm')
         }
 
+        environment {
+            SONAR_TOKEN = credentials("SONAR_${sonarProjectKey}")
+            DOCKER = credentials('docker-credentials')
+        }
+
         stages {
-            stage('Start') {
+            stage('Build Jar') {
                 steps {
-                    sh "mvn clean -e -B"
-                }
-            }
-            stage('Compile') {
-                steps {
-                    sh "mvn compile -e -B"
+                    sh './gradlew clean bootJar'
                 }
             }
             stage('Test') {
                 steps {
-                    sh "mvn test -e -B -Dsurefire.useFile=false"
+                    sh './gradlew test -x bootBuildInfo'
                 }
             }
             stage('Analyse') {
                 steps {
-                    analyseSource(sonarProjectKey, sonarToken, sonarOrganization)
-                }
-            }
-            stage('Package') {
-                steps {
-                    sh "mvn package -DskipTests=true -e -B"
+                    sh "./gradlew sonarqube \
+                          -Dsonar.projectKey=${sonarProjectKey} \
+                          -Dsonar.organization=frogdevelopment \
+                          -Dsonar.host.url=https://sonarcloud.io \
+                          -Dsonar.login=${SONAR_TOKEN} \
+                          -x bootBuildInfo test"
                 }
             }
             stage('Docker Build') {
                 steps {
-                    sh "mvn dockerfile:build -e -B"
-                }
-            }
-            stage('Docker Push') {
-                steps {
-                    dockerize()
+                    sh "./gradlew jib \
+                                -Djib.to.auth.username=$DOCKER_USR \
+                                -Djib.to.auth.password=$DOCKER_PSW \
+                                -Djib.to.tags=${getGitBranchName()} \
+                                -Djib.console='plain' \
+                                -x bootBuildInfo"
                 }
             }
         }
@@ -59,4 +58,9 @@ def call(String sonarProjectKey, String sonarToken, String sonarOrganization = '
             }
         }
     }
+}
+
+
+def getGitBranchName() {
+    return scm.branches[0].name
 }
