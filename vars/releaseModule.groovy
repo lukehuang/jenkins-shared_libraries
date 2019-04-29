@@ -9,7 +9,6 @@ def call() {
         }
 
         options {
-            // Only keep the 10 most recent builds
             buildDiscarder(logRotator(numToKeepStr: '10'))
             disableConcurrentBuilds()
             ansiColor('xterm')
@@ -27,6 +26,7 @@ def call() {
                            error("Build failed because of missing version to release")
                        }
                    }
+                    sh 'git fetch'
                     sh './gradlew clean version'
                 }
             }
