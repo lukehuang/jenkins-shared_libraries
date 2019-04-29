@@ -44,24 +44,23 @@ def call() {
                     sh './gradlew assemble'
                 }
             }
-//            stage('Test') {
-//                steps {
-//                    sh './gradlew test'
-//                }
-//            }
+            stage('Test') {
+                steps {
+                    sh './gradlew test'
+                }
+            }
             stage('Push tag') {
                 steps {
                     withGit {
-//                        sh 'git push --follow-tags'
                         sh "git push origin ${params.TAG}"
                     }
                 }
             }
-//            stage('Publish') {
-//                steps {
-//                    sh "./gradlew publish -PnexusUsername=$NEXUS_USR -PnexusPassword=$NEXUS_PSW"
-//                }
-//            }
+            stage('Publish') {
+                steps {
+                    sh "./gradlew publish -PnexusUsername=$NEXUS_USR -PnexusPassword=$NEXUS_PSW"
+                }
+            }
         }
 
         post {
