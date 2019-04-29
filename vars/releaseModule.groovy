@@ -19,14 +19,14 @@ def call() {
         }
 
         parameters {
-            string(name: 'VERSION', description: 'What is the new version to release ?')
+            string(name: 'TAG', description: 'What is the new version to release ?')
         }
 
         stages {
             stage('Start') {
                 steps {
                     script {
-                        if (params.VERSION == null) {
+                        if (params.TAG == null) {
                             error("Build failed because of missing version to release")
                         }
                     }
@@ -35,7 +35,7 @@ def call() {
             }
             stage('Tag') {
                 steps {
-                    sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
+                    sh "git tag -af -m 'release ${params.TAG}' ${params.TAG}"
                     sh './gradlew version'
                 }
             }
@@ -52,7 +52,7 @@ def call() {
             stage('Push tag') {
                 steps {
 //                    sh 'git push --follow-tags'
-                    sh 'git push origin master'
+                    sh "git push origin ${params.TAG}"
                 }
             }
             stage('Publish') {
@@ -66,7 +66,7 @@ def call() {
 
             failure {
                 echo 'Deleting failed tag'
-                sh "git tag -d ${params.VERSION}"
+                sh "git tag -d ${params.TAG}"
             }
 
             changed {
