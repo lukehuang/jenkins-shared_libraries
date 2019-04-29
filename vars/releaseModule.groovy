@@ -51,7 +51,8 @@ def call() {
             }
             stage('Push tag') {
                 steps {
-                    sh 'git push --follow-tags'
+//                    sh 'git push --follow-tags'
+                    sh 'git push origin master'
                 }
             }
             stage('Publish') {
