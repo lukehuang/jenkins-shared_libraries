@@ -25,13 +25,21 @@ def call() {
         stages {
             stage('Start') {
                 steps {
-                   script {
-                       if (params.VERSION == null) {
-                           error("Build failed because of missing version to release")
-                       }
-                   }
+                    script {
+                        if (params.VERSION == null) {
+                            error("Build failed because of missing version to release")
+                        }
+                    }
                     sh 'git fetch'
                     sh './gradlew clean version'
+                }
+            }
+            stage('Tag') {
+                steps {
+                    sh "git tag --list"
+                    sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
+                    sh "git tag --list"
+                    sh './gradlew version'
                 }
             }
             stage('Assemble') {
@@ -44,12 +52,8 @@ def call() {
                     sh './gradlew test'
                 }
             }
-            stage('Release') {
+            stage('Push tag') {
                 steps {
-                    sh "git tag --list"
-                    sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
-                    sh "git tag --list"
-                    sh './gradlew version'
                     sh 'git push --follow-tags'
                 }
             }
@@ -63,6 +67,11 @@ def call() {
         post {
             always {
                 sendNotifications currentBuild
+            }
+
+            failure {
+                echo 'Deleting failed tag'
+                sh "git tag -d ${params.VERSION}"
             }
         }
     }
