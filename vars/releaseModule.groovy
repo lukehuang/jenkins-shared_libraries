@@ -14,6 +14,10 @@ def call() {
             ansiColor('xterm')
         }
 
+        environment {
+            NEXUS = credentials('nexus')
+        }
+
         parameters {
             string(name: 'VERSION', description: 'What is the new version to release ?')
         }
@@ -49,7 +53,7 @@ def call() {
             }
             stage('Publish') {
                 steps {
-                    publishToNexus()
+                    sh "./gradlew publish -PnexusUsername=$NEXUS_USR -PnexusPassword=$NEXUS_PSW"
                 }
             }
         }
