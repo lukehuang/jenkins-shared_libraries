@@ -30,15 +30,12 @@ def call() {
                             error("Build failed because of missing version to release")
                         }
                     }
-                    sh 'git fetch'
                     sh './gradlew clean version'
                 }
             }
             stage('Tag') {
                 steps {
-                    sh "git tag --list"
                     sh "git tag -af -m 'release ${params.VERSION}' ${params.VERSION}"
-                    sh "git tag --list"
                     sh './gradlew version'
                 }
             }
