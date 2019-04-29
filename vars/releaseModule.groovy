@@ -35,7 +35,7 @@ def call() {
             }
             stage('Tag') {
                 steps {
-                    sh "git tag -af -m 'release ${params.TAG}' ${params.TAG}"
+                    sh "git tag -af -m 'release-${params.TAG}' ${params.TAG}"
                     sh './gradlew version'
                 }
             }
@@ -72,6 +72,12 @@ def call() {
 
             changed {
                 sendNotifications currentBuild
+            }
+
+            always {
+                script {
+                    currentBuild.displayName = "release-${params.TAG}"
+                }
             }
         }
     }
